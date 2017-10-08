@@ -11,33 +11,33 @@ var Game = cc.Class({
 	},
 	
     properties: {
-		birdSprite: {
+		birdNode: {
 			default: null,
-			type: cc.Sprite
+			type: cc.Node
 		},
-		readySprite: {
+		readyNode: {
 			default: null,
-			type: cc.Sprite
+			type: cc.Node
 		},
-		tutorialSprite: {
+		tutorialNode: {
 			default: null,
-			type: cc.Sprite
+			type: cc.Node
 		},
-		landSprite: {
+		landNode: {
 			default: null,
-			type: cc.Sprite
+			type: cc.Node
 		},
 		skyNode: {
 			default: null,
 			type: cc.Node
 		},
-		gameOverSprite: {
+		gameOverNode: {
 			default: null,
-			type: cc.Sprite
+			type: cc.Node
 		},
-		scorePanelSprite: {
+		scorePanelNode: {
 			default: null,
-			type: cc.Sprite
+			type: cc.Node
 		},
 		landRootNode: {
 			default: null,
@@ -77,8 +77,8 @@ var Game = cc.Class({
 		this.anim = this.landRootNode.getComponent(cc.Animation);		
 		//this.node.on(cc.Node.EventType.MOUSE_DOWN, this.onPlayerAct, this);	
 		this.node.on(cc.Node.EventType.TOUCH_START, this.onPlayerAct, this);
-		this.birdScript = this.birdSprite.getComponent('Bird');
-		var box = this.landSprite.node.getBoundingBox();
+		this.birdScript = this.birdNode.getComponent('Bird');
+		var box = this.landNode.getBoundingBox();
 		Game.landTop = box.y + box.height;
 		Game.skyBottom = this.skyNode.y;
 		for (var i=0; i<Game.pipePairPoolSize-1; i++) {
@@ -87,6 +87,10 @@ var Game = cc.Class({
 			this._pipePairNodeList.push(pipePairNode);
 		}
 		this._pipePairNodeList.push(this.templatePipePairNode);
+
+		this.currentScoreLabel.string = this._currentScore;
+		this.bestScoreLabel.string = this._bestScore;
+		this.finalScoreLabel.string = this._currentScore;
 		this.node.on('current-score-changed', function(event) {
 			me.currentScoreLabel.string = event.detail;
 			me.finalScoreLabel.string = event.detail;
@@ -119,11 +123,12 @@ var Game = cc.Class({
 	
 	checkCollision: function() {
 		var me = this;
-		if (this.birdScript.node.getBoundingBox().y <= Game.landTop) {
+		var birdBox = this.birdNode.getBoundingBox();
+		if (birdBox.y <= Game.landTop) {
 			this.changeState(Game.STATE_OVER);
 		}
 		if (this._pipePairNodeList.find(function(pipePairNode) {
-			return pipePairNode.getComponent('PipePair').checkCollision(me.birdScript.getCollisionBox());
+			return pipePairNode.getComponent('PipePair').checkCollision(me.birdNode.getBoundingBox());
 		})) {
 			this.changeState(Game.STATE_OVER);
 		}
@@ -141,16 +146,14 @@ var Game = cc.Class({
 	},
 	
 	updateScore: function() {
-		var birdScript = this.birdScript;
-		var game = this;
-		this._pipePairNodeList.forEach(function(pipePairNode) {
-			var pipePairScript = pipePairNode.getComponent('PipePair');
-			if (!pipePairScript.passed && 
-				pipePairScript.getBoundingRight() < birdScript.getBoundingLeft()) {
-				pipePairScript.passed = true;
-				game.setCurrentScore(game._currentScore + 1);
-			}
-		});		
+		var firstPipePairScript = this._pipePairNodeList[0].getComponent('PipePair');;
+		
+		if (!firstPipePairScript.passed && 
+			firstPipePairScript.getBoundingRight() < this.birdNode.getBoundingBox().x) {
+			firstPipePairScript.passed = true;
+			this.setCurrentScore(this._currentScore + 1);
+			this._pipePairNodeList.push(this._pipePairNodeList.shift());
+		}
 	},
 	
 	generateNewPipePair: function() {
@@ -167,7 +170,6 @@ var Game = cc.Class({
 		if (this._state === Game.STATE_PLAY) {
 			this.checkCollision();
 			this.updateScore();
-			this.currentScoreLabel.string = this._currentScore;
 			if (this.birdScript.getDistance() % PipePair.span === 0) {
 				this.generateNewPipePair();
 			} 
@@ -194,10 +196,10 @@ var Game = cc.Class({
 	onEnterState: function(state) {
 		switch (this._state) {
 			case Game.STATE_TITLE:
-				this.readySprite.node.active = true;
-				this.tutorialSprite.node.active = true;
-				this.gameOverSprite.node.active = false;
-				this.scorePanelSprite.node.active = false;
+				this.readyNode.active = true;
+				this.tutorialNode.active = true;
+				this.gameOverNode.active = false;
+				this.scorePanelNode.active = false;
 				this.currentScoreLabel.node.active = false;
 				this.anim.resume('LandMove');
 				this.birdScript.reborn();
@@ -208,18 +210,18 @@ var Game = cc.Class({
 			case Game.STATE_PLAY:
 				this.birdScript.free();
 				this.birdScript.jump();
-				this.readySprite.node.active = false;
-				this.tutorialSprite.node.active = false;
-				this.gameOverSprite.node.active = false;
-				this.scorePanelSprite.node.active = false;
+				this.readyNode.active = false;
+				this.tutorialNode.active = false;
+				this.gameOverNode.active = false;
+				this.scorePanelNode.active = false;
 				this.currentScoreLabel.node.active = true;	
 				this.setCurrentScore(0);
 				break;
 			case Game.STATE_OVER:
-				this.gameOverSprite.node.active = true;
-				this.scorePanelSprite.node.active = true;
-				this.gameOverSprite.node.active = true;
-				this.scorePanelSprite.node.active = true;
+				this.gameOverNode.active = true;
+				this.scorePanelNode.active = true;
+				this.gameOverNode.active = true;
+				this.scorePanelNode.active = true;
 				this.currentScoreLabel.node.active = false;
 				this.birdScript.die();
 				this.anim.pause('LandMove');
@@ -235,6 +237,10 @@ var Game = cc.Class({
 	
 	getCurrentFrame: function() {
 		return this._currentFrame;
+	},
+	
+	getFirstComingPipePairNode: function() {
+		return this._pipePairNodeList[0];
 	}
 });
 

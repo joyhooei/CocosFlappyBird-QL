@@ -30,7 +30,7 @@ var PipePair = cc.Class({
 	statics: {
 		upInitialPosition: null,
 		downInitialPosition: null,		
-		maxDeltaY: 150,
+		maxDeltaY: 200,
 		span: Bird.speed * 60
 	},
 	
