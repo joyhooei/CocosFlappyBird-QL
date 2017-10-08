@@ -46,7 +46,7 @@ var QL = cc.Class({
 	getState: function() {
 		var ret = null;
 		var pipePairNode = this.game.getFirstComingPipePairNode();	
-		var birdBox = this.game.birdSprite.node.getBoundingBox();
+		var birdBox = this.game.birdNode.getBoundingBox();
 		
 		if (pipePairNode) {
 			var downPipeBox = pipePairNode.getComponent('PipePair').downNode.getBoundingBox();
@@ -82,7 +82,7 @@ var QL = cc.Class({
 					A = this.Q[S].indexOf(Math.max(...this.Q[S]));
 				}
 				if (A) {
-					this.game.birdSprite.getComponent('Bird').jump();					
+					this.game.birdNode.getComponent('Bird').jump();					
 				}
 				this.A = A;					
 			}
