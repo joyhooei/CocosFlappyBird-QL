@@ -1,0 +1,28 @@
+{
+  "appKey": "",
+  "appSecret": "",
+  "excludeScenes": [],
+  "includeAnySDK": false,
+  "includeSDKBox": false,
+  "includeSdk": [
+    "anysdk"
+  ],
+  "inlineSpriteFrames": true,
+  "inlineSpriteFrames_native": true,
+  "md5Cache": false,
+  "mergeStartScene": false,
+  "oauthLoginServer": "",
+  "optimizeHotUpdate": false,
+  "orientation": {
+    "landscapeLeft": true,
+    "landscapeRight": true,
+    "portrait": false,
+    "upsideDown": false
+  },
+  "packageName": "me.sunzhuoshi.cocos-flappybird-ql",
+  "privateKey": "",
+  "renderMode": "0",
+  "startScene": "d1afc72a-e254-46b1-8fa3-196568b41bc7",
+  "title": "Flappy Bird QL",
+  "webOrientation": "auto"
+}

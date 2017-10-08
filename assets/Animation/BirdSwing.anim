@@ -1,0 +1,43 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "BirdSwing",
+  "_objFlags": 0,
+  "_rawFiles": null,
+  "_duration": 0.4166666666666667,
+  "sample": 60,
+  "speed": 1,
+  "wrapMode": 2,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0,
+            "value": {
+              "__uuid__": "22d5ebe5-e9dd-4111-9c41-339ce34b1d39"
+            }
+          },
+          {
+            "frame": 0.13333333333333333,
+            "value": {
+              "__uuid__": "ad49b161-ba00-44cd-b460-1133ee9e59c5"
+            }
+          },
+          {
+            "frame": 0.26666666666666666,
+            "value": {
+              "__uuid__": "d1252bff-c74f-426e-b178-727834d81c3e"
+            }
+          },
+          {
+            "frame": 0.4,
+            "value": {
+              "__uuid__": "d1252bff-c74f-426e-b178-727834d81c3e"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": []
+}
