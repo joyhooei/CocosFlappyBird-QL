@@ -15,19 +15,30 @@ var QL = cc.Class({
 		this.A = null;
 		this.Q = [];
 		this.alpha = 0.6;
-		this.gamma = 0.8;
+		this.gamma = 1;
 		this.epsilon = 0;
 		this.rewardDead = -100;
 		this.rewardAlive = 1;	
 		this.resolution = 15;
 		this.active = false;
+		this.stat = {
+			episodes: 0,
+			maxScore: 0,
+			update: function(game) {
+				this.episodes ++;
+				if (game.getBestScore() > this.maxScore) {
+					this.maxScore = game.getBestScore();
+				}
+			}
+		}
 	},
 	
 	onLoad: function() {
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, function(event) {
 			switch (event.keyCode) {
 				case cc.KEY.space:
-				this.active = !this.active;				
+					this.active = !this.active;	
+					console.log('QL active: ' + this.active);
 					break;
 				default:
 					break;
@@ -87,6 +98,8 @@ var QL = cc.Class({
 				this.A = A;					
 			}
 			else if (this.game.inState(Game.STATE_OVER)){
+				this.stat.update(this.game);
+				console.log(JSON.stringify(this.stat));
 				this.reward(S, this.rewardDead);
 				this.S = null;
 				this.A = null;

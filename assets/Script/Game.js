@@ -241,6 +241,10 @@ var Game = cc.Class({
 	
 	getFirstComingPipePairNode: function() {
 		return this._pipePairNodeList[0];
+	},
+	
+	getBestScore: function() {
+		return this._bestScore;
 	}
 });
 
