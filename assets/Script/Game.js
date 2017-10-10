@@ -185,7 +185,6 @@ var Game = cc.Class({
 	},
 	
 	changeState: function(newState) {
-		//cc.log('state: ' + this._state + ' => ' + newState);
 		if (newState !== this._state) {
 			this.onExitState(this._state);
 			this._state = newState;
@@ -245,6 +244,10 @@ var Game = cc.Class({
 	
 	getBestScore: function() {
 		return this._bestScore;
+	},
+	
+	getFinalScore: function() {
+		return this._currentScore;
 	}
 });
 

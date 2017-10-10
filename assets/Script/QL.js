@@ -10,6 +10,13 @@ var QL = cc.Class({
 		}
 	},
 	
+	statics: {
+		maxEpisode: -1,
+		testSetup: function() {
+			QL.maxEpisode = 100;
+		}
+	},
+	
 	ctor: function() {
 		this.S = null;
 		this.A = null;
@@ -24,11 +31,22 @@ var QL = cc.Class({
 		this.stat = {
 			episodes: 0,
 			maxScore: 0,
+			averageScore: 0,
+			_accumalatedScore: 0,
 			update: function(game) {
+				this._accumalatedScore += game.getFinalScore();
 				this.episodes ++;
-				if (game.getBestScore() > this.maxScore) {
-					this.maxScore = game.getBestScore();
+				this.averageScore = this._accumalatedScore / this.episodes;
+				this.maxScore = game.getBestScore()
+			},
+			toString: function() {
+				var obj = {};
+				for (var key in this) {
+					if (0 > key.indexOf('_')) {
+						obj[key] = this[key];
+					}
 				}
+				return JSON.stringify(obj);
 			}
 		}
 	},
@@ -37,8 +55,7 @@ var QL = cc.Class({
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, function(event) {
 			switch (event.keyCode) {
 				case cc.KEY.space:
-					this.active = !this.active;	
-					console.log('QL active: ' + this.active);
+					this.setActive(!this.active);
 					break;
 				default:
 					break;
@@ -99,12 +116,23 @@ var QL = cc.Class({
 			}
 			else if (this.game.inState(Game.STATE_OVER)){
 				this.stat.update(this.game);
-				console.log(JSON.stringify(this.stat));
+				cc.log('current score: ' + this.game.getFinalScore());
+				cc.log(this.stat.toString());
 				this.reward(S, this.rewardDead);
 				this.S = null;
 				this.A = null;
 				this.game.changeState(Game.STATE_TITLE);
+				if (0 < QL.maxEpisode && this.stat.episodes >= QL.maxEpisode) {
+					this.setActive(false);
+				}
 			}			
 		}
+	},
+	
+	setActive: function(active) {
+		this.active = active;
+		cc.log('QL active: ' + this.active);
 	}
-})
+});
+
+cc.QL = QL;
