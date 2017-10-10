@@ -19,10 +19,10 @@
     "portrait": false,
     "upsideDown": false
   },
-  "packageName": "me.sunzhuoshi.cocos-flappybird-ql",
+  "packageName": "me.sunzhuoshi.flappybird.ql",
   "privateKey": "",
   "renderMode": "0",
   "startScene": "d1afc72a-e254-46b1-8fa3-196568b41bc7",
-  "title": "Flappy Bird QL",
+  "title": "FlappyBirdQL",
   "webOrientation": "auto"
 }
