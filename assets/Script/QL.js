@@ -12,6 +12,14 @@ var QL = cc.Class({
 	
 	statics: {
 		maxEpisode: -1,
+		params: {
+			alpha: 0.6,
+			gamma: 1,
+			epsilon: 0,
+			rewardDead: -100,
+			rewardAlive: 1,			
+		},
+		resolution: 15,		
 		testSetup: function() {
 			QL.maxEpisode = 100;
 		}
@@ -21,12 +29,6 @@ var QL = cc.Class({
 		this.S = null;
 		this.A = null;
 		this.Q = [];
-		this.alpha = 0.6;
-		this.gamma = 1;
-		this.epsilon = 0;
-		this.rewardDead = -100;
-		this.rewardAlive = 1;	
-		this.resolution = 15;
 		this.active = false;
 		this.stat = {
 			episodes: 0,
@@ -67,7 +69,7 @@ var QL = cc.Class({
 		var preS = this.S;
 		var preA = this.A;		
 		if (preS && preA in [0, 1]) {
-			this.Q[preS][preA] = (1 - this.alpha) * this.Q[preS][preA] + this.alpha * (R + this.gamma * Math.max(...this.Q[S]));			
+			this.Q[preS][preA] = (1 - QL.params.alpha) * this.Q[preS][preA] + QL.params.alpha * (R + QL.params.gamma * Math.max(...this.Q[S]));			
 		}
 	},
 	
@@ -79,8 +81,8 @@ var QL = cc.Class({
 		if (pipePairNode) {
 			var downPipeBox = pipePairNode.getComponent('PipePair').downNode.getBoundingBox();
 			ret = [
-				Math.floor((downPipeBox.x + 144) / this.resolution),
-				Math.floor((downPipeBox.y + downPipeBox.height + 90 - birdBox.y) / this.resolution)
+				Math.floor((downPipeBox.x + 144) / QL.resolution),
+				Math.floor((downPipeBox.y + downPipeBox.height + 90 - birdBox.y) / QL.resolution)
 			].join(',');
 		}
 		return ret;
@@ -100,10 +102,10 @@ var QL = cc.Class({
 			}
 			if (this.game.inState(Game.STATE_PLAY)) {
 				var A = 0;				
-				this.reward(S, this.rewardAlive);
+				this.reward(S, QL.params.rewardAlive);
 				this.S = S;
 				
-				if (Math.random() < this.epsilon) { // explore
+				if (Math.random() < QL.params.epsilon) { // explore
 					A = Math.floor(Math.random() * 2);
 				}
 				else { // exploit
@@ -118,7 +120,7 @@ var QL = cc.Class({
 				this.stat.update(this.game);
 				cc.log('current score: ' + this.game.getFinalScore());
 				cc.log(this.stat.toString());
-				this.reward(S, this.rewardDead);
+				this.reward(S, QL.params.rewardDead);
 				this.S = null;
 				this.A = null;
 				this.game.changeState(Game.STATE_TITLE);
@@ -132,6 +134,9 @@ var QL = cc.Class({
 	setActive: function(active) {
 		this.active = active;
 		cc.log('QL active: ' + this.active);
+		if (this.active) {
+			cc.log('QL params: ' + JSON.stringify(QL.params));
+		}
 	}
 });
 
