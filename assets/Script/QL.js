@@ -1,4 +1,5 @@
 var Game = require('Game');
+var Benchmark = require('Benchmark');
 
 var QL = cc.Class({
 	extends: cc.Component,
@@ -7,6 +8,10 @@ var QL = cc.Class({
 		game: {
 			default: null,
 			type: Game
+		},
+		benchmark:{
+			default: null,
+			type: Benchmark
 		}
 	},
 	
@@ -17,7 +22,11 @@ var QL = cc.Class({
 			gamma: 1,
 			epsilon: 0,
 			rewardDead: -100,
-			rewardAlive: 1,			
+			rewardAlive: 1,
+			toString: function() {
+				var ret = JSON.stringify(this).replace(/"/g, '').replace(/,/g, ', ');
+				return ret.substr(1, ret.length - 2);
+			}
 		},
 		resolution: 15,		
 		testSetup: function() {
@@ -50,10 +59,31 @@ var QL = cc.Class({
 				}
 				return JSON.stringify(obj);
 			}
-		}
+		},
+		QL.instance = this;
 	},
 	
 	onLoad: function() {
+		if (cc.sys.isBrowser) {
+			var getQlButtonText = () => {
+				return (this.active? 'Disable': 'Enable') + 'QL';
+			}
+			var buttonContainer = document.getElementById('buttonContainer');
+			if (!buttonContainer) {
+				buttonContainer = document.createElement('DIV');
+				buttonContainer.id = 'buttonContainer';
+				document.getElementById('content').appendChild(buttonContainer);
+			}
+			var qlButton = document.createElement('BUTTON');
+			qlButton.innerHTML = getQlButtonText();
+			qlButton.style = 'flex-shrink: 0; margin: 10px';
+			buttonContainer.appendChild(qlButton);
+			
+			qlButton.onclick = () => {
+				this.setActive(!this.active);
+				qlButton.innerHTML = getQlButtonText();					
+			};				
+		}
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, function(event) {
 			switch (event.keyCode) {
 				case cc.KEY.space:
@@ -118,6 +148,7 @@ var QL = cc.Class({
 			}
 			else if (this.game.inState(Game.STATE_OVER)){
 				this.stat.update(this.game);
+				this.benchmark.updateData(QL.params, this.stat, this.game);
 				cc.log('current score: ' + this.game.getFinalScore());
 				cc.log(this.stat.toString());
 				this.reward(S, QL.params.rewardDead);
