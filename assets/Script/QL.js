@@ -160,6 +160,7 @@ var QL = cc.Class({
 					this.A = null;
 					this.game.changeState(Game.STATE_TITLE);
 					if (0 < QL.maxEpisode && this.stat.episodes >= QL.maxEpisode) {
+						if (this.benchmark.doNextCase()) {
 							this.stat.reset();
 						}
 						else {
