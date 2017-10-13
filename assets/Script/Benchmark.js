@@ -1,3 +1,5 @@
+var WebUtil = require('WebUtil');
+
 var Benchmark = cc.Class({
 	extends: cc.Component,
 		
@@ -12,6 +14,7 @@ var Benchmark = cc.Class({
 	
 	ctor: function() {
 		this.enabled = true;
+		this._index = 0;
 	},
 	
 	updateData: function(params, stat, game){
@@ -46,12 +49,7 @@ var Benchmark = cc.Class({
 			var canvas = document.createElement('CANVAS');
 			var contentWrap = document.querySelector('.ContentWrap');
 			
-			var buttonContainer = document.getElementById('buttonContainer');
-			if (!buttonContainer) {
-				buttonContainer = document.createElement('DIV');
-				buttonContainer.id = 'buttonContainer';
-				document.getElementById('content').appendChild(buttonContainer);
-			}
+			var buttonContainer = WebUtil.getButtonContainer();
 			var clearButton = document.createElement('BUTTON');
 			clearButton.innerHTML = 'Clear Data';
 			clearButton.style = 'flex-shrink: 0; margin: 10px';
@@ -108,5 +106,19 @@ var Benchmark = cc.Class({
 				options: options
 			});
 		}
+	},
+	
+	doNextCase: function() {
+		var ret = true;
+		this._index ++;
+		switch (this._index) {
+			case 1:
+				cc.QL.params.alpha += 0.0001;
+				break;
+			default:
+				ret = false;
+				break;			
+		}
+		return ret;
 	}
 });
