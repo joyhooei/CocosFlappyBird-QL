@@ -261,7 +261,7 @@ var Game = cc.Class({
 	_loadAnalysisSDK: function(){
 		var appid = 'B69267AB1E274FD18327D82EB7FBF0D9';
 		var version = 1.0;
-        this.loadScript('http://sdk.talkingdata.com/app/h5/v1?appid=' + appid + '&vn=' + version + '&vc=' + version);    		
+        this._loadScript('http://sdk.talkingdata.com/app/h5/v1?appid=' + appid + '&vn=' + version + '&vc=' + version);    		
 	},
 });
 
