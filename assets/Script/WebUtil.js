@@ -6,7 +6,7 @@ var WebUtil = {
 			if (!buttonContainer) {
 				buttonContainer = document.createElement('DIV');
 				buttonContainer.id = 'buttonContainer';
-				document.getElementById('content').appendChild(buttonContainer);
+				document.getElementById('Cocos2dGameContainer').appendChild(buttonContainer);
 			}			
 		}
 		return buttonContainer;

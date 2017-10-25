@@ -47,7 +47,10 @@ var Benchmark = cc.Class({
 		if (cc.sys.isBrowser) {
 			var container = document.createElement('DIV');
 			var canvas = document.createElement('CANVAS');
-			var contentWrap = document.querySelector('.ContentWrap');
+			var contentWrap = document.querySelector('.contentWrap');
+			if (!contentWrap) {
+				contentWrap = document.getElementById('Cocos2dGameContainer');
+			}
 			
 			var buttonContainer = WebUtil.getButtonContainer();
 			var clearButton = document.createElement('BUTTON');
@@ -64,11 +67,13 @@ var Benchmark = cc.Class({
 			
 			contentWrap.style.display = 'block';
 			contentWrap.style.width = 'auto';
-			contentWrap.style.overflow = 'visible';
+			contentWrap.style.overflow = 'unset';
+			contentWrap.style.position = 'relative';
 			
 			container.style.display = 'flex';
 			container.style.width = '640px';
-			container.style.height = '640px';		
+			container.style.height = '640px';
+			container.style.margin = 'auto';			
 			container.appendChild(canvas);
 			contentWrap.parentNode.appendChild(container);
 						
