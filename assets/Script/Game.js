@@ -99,6 +99,7 @@ var Game = cc.Class({
 			me.bestScoreLabel.string = event.detail;
 		});
 		cc.view.enableAntiAlias(false);
+		this._loadAnalysisSDK();		
 	},
 	
 	start: function() {
@@ -248,7 +249,20 @@ var Game = cc.Class({
 	
 	getFinalScore: function() {
 		return this._currentScore;
-	}
+	},
+	
+    _loadScript: function(uri, callback) {
+        var el = document.createElement('script');
+        el.src = uri;
+        el.onload = callback;
+        document.head.appendChild(el);
+    },
+
+	_loadAnalysisSDK: function(){
+		var appid = 'B69267AB1E274FD18327D82EB7FBF0D9';
+		var version = 1.0;
+        this.loadScript('http://sdk.talkingdata.com/app/h5/v1?appid=' + appid + '&vn=' + version + '&vc=' + version);    		
+	},
 });
 
 
