@@ -55,7 +55,8 @@ var Benchmark = cc.Class({
 			var buttonContainer = WebUtil.getButtonContainer();
 			var clearButton = document.createElement('BUTTON');
 			clearButton.innerHTML = 'Clear Data';
-			clearButton.style = 'flex-shrink: 0; margin: 10px';
+			clearButton.style.margin = '10px';
+			clearButton.style.flexShrink = '0';
 			
 			clearButton.onclick = () => {
 				this.chart.data.datasets = [];
@@ -71,11 +72,26 @@ var Benchmark = cc.Class({
 			contentWrap.style.position = 'relative';
 			
 			container.style.display = 'flex';
-			container.style.width = '640px';
-			container.style.height = '640px';
-			container.style.margin = 'auto';			
+			container.style.width = '100%';
+			container.style.maxWidth = '640px';
+			container.style.height = '480px';
 			container.appendChild(canvas);
 			contentWrap.parentNode.appendChild(container);
+			
+			var scrollButton = document.createElement('BUTTON');	
+			scrollButton.style.width = '96px';
+			scrollButton.style.height = '32px';
+			scrollButton.style.position = 'absolute';
+			scrollButton.style.margin = '0 -48px';
+			scrollButton.style.left = '50%';
+			scrollButton.style.top = '5px';
+			scrollButton.onclick = function() {
+				window.scrollTo(0, 78);
+			}
+			scrollButton.innerHTML = 'Scroll Down';
+			document.getElementById('Cocos2dGameContainer').appendChild(scrollButton);
+			
+			document.body.style.height = 'fit-content';
 						
 			var ctx = canvas.getContext('2d');
 			var options = {
